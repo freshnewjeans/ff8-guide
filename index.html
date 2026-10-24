@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Final Fantasy VIII Remastered — Trophy Tracker &amp; Guide</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FF8 Guide">
+<meta name="theme-color" content="#f5f5f7">
+<style>
+  :root{
+    --bg:#ececf0; --window:#f5f5f7; --sidebar:rgba(238,238,242,0.72);
+    --card:#ffffff; --card-hover:#f2f2f5; --stroke:rgba(0,0,0,0.08); --stroke2:rgba(0,0,0,0.14);
+    --text:#1d1d1f; --text2:#6e6e73; --text3:#a1a1a6;
+    --accent:#0a84ff; --green:#28c840; --amber:#f5a623; --red:#ff3b30;
+    --ffblue:#0a84ff; --ffpurple:#5e5ce6; --ffdark:#14161f;
+    --gold:#c7931a; --silver:#9aa0a6; --bronze:#a8682f; --platinum:#c9cdd6;
+    --radius:10px; --radius-lg:14px; --shadow:0 24px 70px rgba(0,0,0,0.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+    background:radial-gradient(1100px 640px at 82% -8%,#dfe9fb 0%,transparent 55%),radial-gradient(800px 540px at -8% 112%,#e7e0fa 0%,transparent 55%),var(--bg);
+    color:var(--text);-webkit-font-smoothing:antialiased;letter-spacing:-0.01em;
+    display:flex;align-items:center;justify-content:center;padding:24px;min-height:100vh;}
+  .window{width:min(1240px,100%);height:min(880px,96vh);background:var(--window);
+    border-radius:var(--radius-lg);box-shadow:var(--shadow),0 0 0 .5px rgba(0,0,0,.08);
+    display:flex;flex-direction:column;overflow:hidden;}
+  .titlebar{height:52px;flex:0 0 auto;display:flex;align-items:center;gap:14px;padding:0 16px;
+    background:rgba(246,246,249,.72);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);
+    border-bottom:1px solid var(--stroke);}
+  .traffic{display:flex;gap:8px}.traffic span{width:12px;height:12px;border-radius:50%;display:block}
+  .t-red{background:#ff5f57}.t-yellow{background:#febc2e}.t-green{background:#28c840}
+  .ttitle{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:9px;flex:1;min-width:0}
+  .ttitle .ic{width:22px;height:22px;border-radius:6px;background:linear-gradient(160deg,#5e5ce6,#0a84ff);
+    display:grid;place-items:center;font-size:10px;color:#fff;font-weight:800;flex:0 0 auto}
+  .progress-wrap{display:flex;align-items:center;gap:10px}
+  .pct{font-size:12.5px;color:var(--text2);font-variant-numeric:tabular-nums;min-width:74px;text-align:right}
+  .ptrack{width:180px;height:6px;border-radius:99px;background:rgba(0,0,0,.1);overflow:hidden}
+  .pfill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#5e5ce6,#0a84ff);transition:width .45s cubic-bezier(.2,.8,.2,1)}
+  .toolbar{flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--stroke);flex-wrap:wrap}
+  .seg{display:flex;background:rgba(0,0,0,.06);border-radius:8px;padding:2px;gap:2px;flex-wrap:wrap}
+  .seg button{appearance:none;border:0;background:transparent;color:var(--text2);font-size:12.5px;font-weight:500;
+    padding:7px 12px;border-radius:6px;cursor:pointer;font-family:inherit;transition:all .15s ease;min-height:30px}
+  .seg button.active{background:#fff;color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+  .search{margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.06);border-radius:8px;padding:7px 11px;min-width:200px}
+  .search input{background:transparent;border:0;outline:0;color:var(--text);font-size:13px;font-family:inherit;width:100%;min-height:28px}
+  .search input::placeholder{color:var(--text3)}
+  .body{flex:1;display:flex;min-height:0}
+  .sidebar{flex:0 0 250px;background:var(--sidebar);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);
+    border-right:1px solid var(--stroke);padding:14px 10px;overflow-y:auto}
+  .side-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:8px 10px 6px}
+  .side-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--text2);margin-bottom:1px;transition:background .12s ease;min-height:34px}
+  .side-item:hover{background:rgba(0,0,0,.05);color:var(--text)}
+  .side-item.active{background:rgba(10,132,255,.18);color:#0a5dc2}
+  .side-item .dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+  .side-item .cnt{margin-left:auto;font-size:11px;color:var(--text3);font-variant-numeric:tabular-nums}
+  .side-item .cnt.done{color:var(--green)}
+  .main{flex:1;overflow-y:auto;padding:22px 26px 90px;min-width:0}
+  .phase-head{margin-bottom:16px}
+  .pk{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.04em;text-transform:uppercase}
+  .pt{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-top:3px}
+  .pd{font-size:13.5px;color:var(--text2);margin-top:6px;line-height:1.5;max-width:680px}
+  .trophy{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;transition:background .15s ease,border-color .15s ease}
+  .trophy:hover{background:var(--card-hover)}
+  .trow{display:flex;align-items:center;gap:13px;padding:13px 15px;cursor:pointer;min-height:52px}
+  .check{width:22px;height:22px;border-radius:50%;flex:0 0 auto;border:2px solid var(--text3);display:grid;place-items:center;position:relative;transition:all .18s ease}
+  .check::after{content:"";position:absolute;inset:-11px;border-radius:50%}
+  .check svg{opacity:0;transform:scale(.5);transition:all .18s ease}
+  .trophy.done .check{background:var(--green);border-color:var(--green)}
+  .trophy.done .check svg{opacity:1;transform:scale(1)}
+  .trophy.done .tn{color:var(--text3);text-decoration:line-through}
+  .tbadge{flex:0 0 auto;width:38px;height:38px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.18));transition:opacity .18s ease,filter .18s ease}
+  .trophy.done .tbadge{opacity:.45;filter:grayscale(.8)}
+  .tb{flex:1;min-width:0}
+  .tn{font-size:14px;font-weight:600;transition:color .15s}
+  .ts{font-size:12px;color:var(--text3);margin-top:2px;line-height:1.4}
+  .badges{display:flex;gap:6px;flex:0 0 auto;flex-wrap:wrap}
+  .badge{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:99px;letter-spacing:.03em;text-transform:uppercase}
+  .badge.missable{background:rgba(245,166,35,.18);color:#b26a00}
+  .badge.critical{background:rgba(255,59,48,.16);color:#d70015}
+  .badge.grind{background:rgba(10,132,255,.14);color:#0a6fd6}
+  .badge.story{background:rgba(0,0,0,.05);color:var(--text2)}
+  .chev{color:var(--text3);transition:transform .2s ease;flex:0 0 auto}
+  .trophy.open .chev{transform:rotate(90deg)}
+  .tdetail{max-height:0;overflow:hidden;transition:max-height .28s ease;border-top:0 solid var(--stroke)}
+  .trophy.open .tdetail{max-height:3000px;border-top-width:1px}
+  .tdi{padding:13px 16px 15px 66px;font-size:13px;line-height:1.62;color:var(--text2)}
+  .tdi strong{color:var(--text)}
+  .guide-block{margin-top:6px}
+  .guide-block h4{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;margin:8px 0 4px}
+  .guide-block p{margin:0 0 7px}
+  .tip{margin-top:8px;padding:9px 12px;border-radius:8px;background:rgba(10,132,255,.08);border-left:3px solid var(--accent);color:#0a5dc2;font-size:12.5px;line-height:1.55}
+  .tip.warn{background:rgba(245,166,35,.10);border-left-color:var(--amber);color:#9c6a00}
+  .tip.crit{background:rgba(255,59,48,.08);border-left-color:var(--red);color:#c21f12}
+  .platinum-card{background:linear-gradient(135deg,rgba(197,203,216,.20),rgba(197,203,216,.04));border:1px solid rgba(130,135,150,.32);border-radius:var(--radius-lg);padding:18px 20px;display:flex;align-items:center;gap:16px;margin-bottom:22px}
+  .platinum-card .medal{width:46px;height:46px;border-radius:12px;flex:0 0 auto;background:linear-gradient(145deg,#e8e8ed,#a8a8b0);display:grid;place-items:center;color:#1c1c1e;font-weight:800;font-size:13px}
+  .platinum-card h3{font-size:16px;font-weight:700}.platinum-card p{font-size:12.5px;color:var(--text2);margin-top:2px}
+  .empty{color:var(--text3);font-size:13px;padding:30px;text-align:center}
+  .footnote{margin-top:30px;font-size:11.5px;color:var(--text3);line-height:1.6;border-top:1px solid var(--stroke);padding-top:14px}
+  .creditbar{flex:0 0 auto;text-align:center;font-size:11px;color:#86868b;padding:8px 0 calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--stroke);background:rgba(246,246,249,.6)}
+  .maphdr{margin-bottom:14px}.maphdr .pk{color:var(--accent)}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 16px;background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);padding:12px 16px;margin-bottom:18px;font-size:12px;color:var(--text2)}
+  .lg{display:flex;align-items:center;gap:6px}
+  .lg .tbadge{width:22px;height:22px}
+  .guidepage{max-width:860px}
+  .guide-section{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);padding:18px 20px;margin-bottom:16px}
+  .guide-section h2{font-size:16px;font-weight:700;margin-bottom:8px}
+  .guide-section .sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+  .guide-section h3{font-size:13px;font-weight:600;margin:14px 0 6px;color:var(--text)}
+  .guide-section ul{margin:0 0 8px 18px}.guide-section li{margin-bottom:5px;font-size:13px;line-height:1.55;color:var(--text2)}
+  .guide-section p{font-size:13px;line-height:1.6;color:var(--text2);margin-bottom:8px}
+  .gf-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:6px 0 4px}
+  .gf-table th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text3);padding:6px 8px;border-bottom:1px solid var(--stroke)}
+  .gf-table td{padding:7px 8px;border-bottom:1px solid var(--stroke);color:var(--text2);vertical-align:top}
+  .gf-table td:first-child{font-weight:600;color:var(--text);white-space:nowrap}
+  .shot{width:100%;border-radius:var(--radius);border:1px solid var(--stroke);margin:6px 0 4px;display:block}
+  .shotcap{font-size:11.5px;color:var(--text3);margin:0 0 12px;line-height:1.5}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:760px){
+    body{padding:0;background:var(--bg)}
+    .window{width:100%;height:100vh;border-radius:0}
+    .sidebar{display:none}
+    .search{min-width:0;flex:1}
+    .grid2{grid-template-columns:1fr}
+    .ptrack{width:90px}
+    .tdi{padding-left:16px}
+  }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="traffic"><span class="t-red"></span><span class="t-yellow"></span><span class="t-green"></span></div>
+    <div class="ttitle"><span class="ic">FF8</span><span>Final Fantasy VIII Remastered — Trophy Tracker &amp; Guide</span></div>
+    <div class="progress-wrap">
+      <div class="pct" id="pct">0 / 35</div>
+      <div class="ptrack"><div class="pfill" id="pfill"></div></div>
+    </div>
+  </div>
+  <div class="toolbar">
+    <div class="seg" id="viewTabs">
+      <button data-view="tracker" class="active">Trophy Tracker</button>
+      <button data-view="guide">Game Guide</button>
+    </div>
+    <div class="seg" id="tierFilter" style="display:none">
+      <button data-tier="all" class="active">All</button>
+      <button data-tier="platinum">Platinum</button>
+      <button data-tier="gold">Gold</button>
+      <button data-tier="silver">Silver</button>
+      <button data-tier="bronze">Bronze</button>
+    </div>
+    <div class="search"><input id="q" type="search" placeholder="Search trophies…"></div>
+  </div>
+  <div class="body">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main" id="main"></div>
+  </div>
+  <div class="creditbar">Prepared by Kevin Lim Fung Yen — EV Supreme In-House Trainer</div>
+</div>
+
+<script>
+/* ===== SVG tier badge (platinum / gold / silver / bronze) ===== */
+function badgeSVG(tier, size){
+  const c = {platinum:["#ffffff","#c9cdd6","#8f97a3","#3a3f47"],
+             gold:["#fff3cf","#f5c542","#c7931a","#7a5610"],
+             silver:["#f2f4f6","#c6ccd2","#9aa0a6","#565b62"],
+             bronze:["#f7dcc2","#d28a4a","#a8682f","#6a3f18"]}[tier];
+  return `<svg class="tbadge" width="${size}" height="${size}" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g-${tier}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[2]}"/>
+      </linearGradient>
+    </defs>
+    <path d="M24 3 L28.5 9 L35.8 8.6 L33.6 15.5 L39 20 L33.6 24.5 L35.8 31.4 L28.5 31 L24 37 L19.5 31 L12.2 31.4 L14.4 24.5 L9 20 L14.4 15.5 L12.2 8.6 L19.5 9 Z" fill="url(#g-${tier})" stroke="${c[3]}" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M24 11 L26.7 16.2 L32.5 16.9 L28.3 21 L29.5 26.7 L24 24 L18.5 26.7 L19.7 21 L15.5 16.9 L21.3 16.2 Z" fill="${c[1]}" opacity=".85"/>
+  </svg>`;
+}
+const TIER_LABEL = {platinum:"Platinum", gold:"Gold", silver:"Silver", bronze:"Bronze"};
+const TIER_ORDER = {platinum:0, gold:1, silver:2, bronze:3};
+
+/* ===== Trophy data (accurate FF8 Remastered list: 1P / 4G / 16S / 14B = 35) ===== */
+const TROPHIES = [
+  // Phase 1 — Into Balamb Garden
+  {id:"quezacotl", n:"Quezacotl", tier:"bronze", phase:1,
+   ts:"Unlock Guardian Force Quezacotl", tags:["story"],
+   guide:`
+     <p>One of the very first trophies in the game. After Squall wakes in the infirmary, head back toward the classroom — Quistis teaches you how to Junction Guardian Forces and <strong>Quezacotl joins your party automatically</strong>.</p>
+     <div class="tip">No way to miss it — it unlocks during the opening tutorial at Balamb Garden.</div>`},
+  {id:"shiva", n:"Shiva", tier:"bronze", phase:1,
+   ts:"Unlock Guardian Force Shiva", tags:["story"],
+   guide:`<p>Acquired <strong>immediately after Quezacotl</strong> in the same opening tutorial at Balamb Garden. She is given to you at the start and cannot be missed.</p>`},
+  {id:"cardplayer", n:"Card Player", tier:"bronze", phase:1,
+   ts:"Play Triple Triad", tags:["story"],
+   guide:`
+     <p>Simply <strong>play one game of Triple Triad</strong> with any opponent. Cards can be found at Balamb Garden (your classmates), in towns, and on the world map.</p>
+     <div class="tip">The closest opponent is the librarian at the Garden or students in the classroom. Win or lose, the trophy pops after a full game.</div>`},
+  {id:"handyman", n:"Handyman", tier:"bronze", phase:1,
+   ts:"Upgrade your weapon", tags:["missable","grind"],
+   guide:`
+     <p>Upgrade <strong>any character's weapon at a Junk Shop</strong>. You need the required materials (from enemy drops or Card Mod) plus gil.</p>
+     <p><strong>Easiest path:</strong> get Screws and other low-tier materials early, then upgrade Squall's weapon at the Balamb Junk Shop.</p>
+     <div class="tip">Use Quezacotl's <strong>Card Mod</strong> ability to refine spare Triple Triad cards into weapon materials — this is the fastest way to fund early upgrades.</div>`},
+  {id:"kills100", n:"100 Kills", tier:"bronze", phase:1,
+   ts:"Kill 100 enemies", tags:["grind"],
+   guide:`<p>Defeat 100 enemies in battle. This comes naturally across Disc 1 — grind in the Fire Cavern, outside Balamb, or on the world map if you want it sooner.</p>`},
+
+  // Phase 2 — SeeD Exam & Salary
+  {id:"ifrit", n:"Ifrit", tier:"bronze", phase:2,
+   ts:"Unlock Guardian Force Ifrit", tags:["story"],
+   guide:`
+     <p>During the <strong>SeeD exam</strong>, enter the <strong>Fire Cavern</strong> outside Balamb. Choose the <strong>10-minute time limit</strong> (the best score for SeeD experience) and fight your way to the center.</p>
+     <p>Defeat the boss <strong>Ifrit</strong> — he joins your party and you also win the <strong>Ifrit card</strong>. He is weak to Ice (Blizzard / Shiva).</p>
+     <div class="tip">Higher SeeD score from the exam = faster promotion later, which helps the Top Rank trophy.</div>`},
+  {id:"salary", n:"First Salary", tier:"bronze", phase:2,
+   ts:"Get your first salary from SeeD", tags:["story"],
+   guide:`<p>After passing the <strong>SeeD exam</strong> and becoming a SeeD, open the <strong>SeeD terminal / money interface</strong> in Balamb Garden (or check in) to collect your <strong>first salary</strong>.</p>`},
+  {id:"magician", n:"Magician", tier:"silver", phase:2,
+   ts:"Draw (Stock) magic from enemies 100 times", tags:["grind"],
+   guide:`
+     <p>Use the <strong>Draw</strong> command against enemies <strong>100 times</strong> in battle (stocking magic from enemies counts).</p>
+     <div class="tip">Many bosses and high-tier enemies carry rare magic worth drawing. Draw from every enemy you fight and this accumulates quickly across the game.</div>`},
+  {id:"magicminer", n:"Magic Miner", tier:"silver", phase:2,
+   ts:"Draw magic 100 times from draw points", tags:["grind"],
+   guide:`
+     <p>Collect magic from <strong>draw points</strong> (the shimmering glowing spots found in dungeons and on the map) <strong>100 times</strong>.</p>
+     <div class="tip">Draw points refill over time — revisit dungeons such as the Fire Cavern and the various towers to top this off.</div>`},
+  {id:"toprank", n:"Top Rank", tier:"silver", phase:2,
+   ts:"Reach SeeD rank A", tags:["missable","grind"],
+   guide:`
+     <p>Raise your <strong>SeeD rank to A</strong> (the maximum). Your rank increases as you score well in the SeeD exams and complete field missions, then check in at a Garden terminal.</p>
+     <p><strong>Key tips:</strong> take the <strong>10-minute Fire Cavern</strong> for maximum exam score, defeat <strong>X-ATM092</strong> during the Dollet exam, and keep your party's average level and performance high on the timed SeeD checks.</p>
+     <div class="tip warn">SeeD rank is checked periodically at terminals. If you let many exam cycles pass, promotions slow — keep your exam scores high to reach A efficiently.</div>`},
+
+  // Phase 3 — Guardian Force Hunt
+  {id:"diablos", n:"Diablos", tier:"bronze", phase:3,
+   ts:"Unlock Guardian Force Diablos", tags:["missable"],
+   guide:`
+     <p>Use the <strong>Magic Lamp</strong> item (given to Squall by <strong>Cid</strong> at the Garden) to trigger a battle with <strong>Diablos</strong>.</p>
+     <p>Defeat him and he joins. Recommended around level 20+. Draw the strong magic he carries before finishing him.</p>
+     <div class="tip">You can use the lamp at any time and in almost any location — save before using it.</div>`},
+  {id:"siren", n:"Siren", tier:"bronze", phase:3,
+   ts:"Unlock Guardian Force Siren", tags:["missable","critical"],
+   guide:`
+     <p><strong>Draw Siren from the boss Elvoret</strong> at the top of the <strong>Dollet TV Tower</strong> during the SeeD exam (Disc 1).</p>
+     <div class="tip crit">This is missable! Use the Draw command on Elvoret before the battle ends — make sure every party member attempts a Draw, as Siren will only stock with one of them.</div>`},
+  {id:"brothers", n:"Brothers", tier:"bronze", phase:3,
+   ts:"Unlock Guardian Force Brothers", tags:["missable"],
+   guide:`
+     <p>Enter the <strong>Tomb of the Unknown King</strong> (near the coast of Centra, reached during Disc 1 side-questing after leaving Balamb).</p>
+     <p>Solve the tomb's puzzles, then defeat <strong>Sacred &amp; Minotaur</strong> — they join your party as the Brothers GF.</p>
+     <div class="tip">A mandatory story point takes you near the Tomb — do not skip the side trip, or you'll have to come back for it.</div>`},
+  {id:"carbuncle", n:"Carbuncle", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Carbuncle", tags:["missable"],
+   guide:`
+     <p><strong>Draw Carbuncle from one of the two Iguion bosses</strong> during the <strong>Deling City parade</strong> (Disc 2).</p>
+     <div class="tip warn">Missable — if you don't draw him in that fight, he can only be recovered from the <strong>Krysta</strong> boss in Ultimecia's Castle at the very end.</div>`},
+  {id:"leviathan", n:"Leviathan", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Leviathan", tags:["missable"],
+   guide:`
+     <p><strong>Draw Leviathan from the NORG boss</strong> — fight him in the depths of Balamb Garden (Disc 2) after the Garden is attacked. Destroy NORG's pod, then draw Leviathan from him.</p>
+     <div class="tip warn">Missable — draw before the battle ends, or recover it from the <strong>Trauma</strong> boss in Ultimecia's Castle.</div>`},
+  {id:"pandemona", n:"Pandemona", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Pandemona", tags:["missable"],
+   guide:`
+     <p><strong>Draw Pandemona from Fujin</strong> during the battle against <strong>Fujin &amp; Raijin</strong> at the Galbadia / missile-base section (end of Disc 2).</p>
+     <div class="tip warn">Missable — draw from Fujin before the battle ends, or recover it from <strong>Red Giant</strong> in Ultimecia's Castle.</div>`},
+  {id:"cerberus", n:"Cerberus", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Cerberus", tags:["missable"],
+   guide:`
+     <p><strong>Defeat Cerberus</strong>, who waits in the center of the <strong>Galbadia Garden</strong> main hall during the raid (Disc 2). He joins your party after the battle.</p>
+     <div class="tip warn">Missable — challenge him before leaving the Garden, or recover him from <strong>Gargantua</strong> in Ultimecia's Castle.</div>`},
+  {id:"alexander", n:"Alexander", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Alexander", tags:["missable"],
+   guide:`
+     <p><strong>Draw Alexander from the boss Edea</strong> during the battle at the end of the Deling City / parade sequence (Disc 2).</p>
+     <div class="tip warn">Missable — draw before finishing the fight, or recover it from <strong>Catoblepas</strong> in Ultimecia's Castle.</div>`},
+  {id:"doomtrain", n:"Doomtrain", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Doomtrain", tags:["missable","grind"],
+   guide:`
+     <p><strong>Doomtrain is not fought</strong> — he is crafted. Combine the <strong>Solomon Ring</strong> (obtained in Galbadia Garden / on a train in Disc 2) with 6 items — including a <strong>Malboro Tentacle</strong>, <strong>Steel Pipe</strong>, <strong>Remedy+</strong> and other rare materials — at a <strong>save point</strong>.</p>
+     <div class="tip">Refine the required items from enemies and cards (the Remedy+ comes from refining Remedies). Do this before Disc 4.</div>`},
+  {id:"bahamut", n:"Bahamut", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Bahamut", tags:["missable"],
+   guide:`
+     <p>Reach the <strong>Deep Sea Research Center</strong> (accessible once you have the Ragnarok airship) and descend to the bottom. Defeat the boss <strong>Bahamut</strong> to make him join.</p>
+     <div class="tip">There is no Draw here — Bahamut joins by being defeated. The tougher <strong>Ultima Weapon</strong> appears right after (see Eden).</div>`},
+  {id:"cactuar", n:"Cactuar", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Cactuar", tags:["missable","grind"],
+   guide:`
+     <p>On <strong>Cactuar Island</strong> (a small island in the southeast ocean), defeat the rare <strong>Jumbo Cactuar</strong> to unlock Cactuar.</p>
+     <div class="tip">Jumbo Cactuar is a random encounter and may run. Use high damage + junctioned Strength and kill it before it escapes.</div>`},
+  {id:"tonberry", n:"Tonberry", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Tonberry", tags:["missable","grind"],
+   guide:`
+     <p>In the <strong>Centra Ruins</strong>: first defeat <strong>Odin</strong>, then fight <strong>20 regular Tonberries</strong> to make the <strong>Tonberry King</strong> appear.</p>
+     <p><strong>Draw Tonberry from the Tonberry King</strong> when he appears.</p>
+     <div class="tip warn">Missable — draw the King before he finishes you off, or recover him from <strong>Tiamat</strong> in Ultimecia's Castle.</div>`},
+  {id:"eden", n:"Eden", tier:"silver", phase:3,
+   ts:"Unlock Guardian Force Eden", tags:["missable"],
+   guide:`
+     <p>After defeating <strong>Bahamut</strong> in the Deep Sea Research Center, the boss <strong>Ultima Weapon</strong> appears.</p>
+     <p><strong>Draw Eden from Ultima Weapon</strong> before defeating it.</p>
+     <div class="tip warn">Missable — make sure to Draw Eden during this fight. It is the strongest GF in the game.</div>`},
+
+  // Phase 4 — Card World
+  {id:"loser", n:"Loser", tier:"bronze", phase:4,
+   ts:"Lose a rare card in a Triple Triad game", tags:["missable"],
+   guide:`
+     <p>Lose a <strong>rare card</strong> in a Triple Triad match. Rare cards are the high-value character / GF cards (e.g. Ifrit, Shiva, the character cards).</p>
+     <p>Easiest: challenge a weak opponent, bet a rare card, and deliberately lose. You can win it back later by rematching (and the Queen of Cards / CC group can help rebuild your collection).</p>
+     <div class="tip warn">Only do this once you have a duplicate or are confident you can re-obtain the card — losing the wrong rare card can complicate the Card King trophy.</div>`},
+  {id:"ccmaster", n:"Cards Club Master", tier:"silver", phase:4,
+   ts:"Defeat every member of the CC group", tags:["missable"],
+   guide:`
+     <p>Defeat <strong>every member of the Card Club (CC Group)</strong> in Balamb Garden. The members hide in various nooks around the Garden — you must win their <strong>secret card</strong> from each.</p>
+     <div class="tip">After beating the initial members, others appear in new spots (e.g. the top floor, near the elevator, the basement). Talk to students and check the hidden corners. This is the key step toward collecting all cards.</div>`},
+
+  // Phase 5 — Side Quests & Collectibles
+  {id:"maxhp", n:"Maximum HP", tier:"bronze", phase:5,
+   ts:"Reach maximum HP", tags:["grind"],
+   guide:`
+     <p>Reach <strong>9999 max HP</strong> on a character.</p>
+     <p>Junction powerful magic (Full-Life / Curaga / Meltdown) to <strong>HP</strong> via a GF's HP-J ability, combine the <strong>HP +20% / +40% / +80%</strong> abilities, and keep party level reasonably high.</p>
+     <div class="tip">A GF like <strong>Ifrit</strong> or <strong>Taurus</strong> with the HP-J and HP+ abilities plus a stocked Full-Life will push a character past the cap.</div>`},
+  {id:"chocobo", n:"Chocobo", tier:"bronze", phase:5,
+   ts:"Capture a Chocobo", tags:["missable"],
+   guide:`
+     <p>At a <strong>Chocobo Forest</strong>, use <strong>Gysahl Greens</strong> (buyable from many shops) to lure and <strong>capture a Chocobo</strong>.</p>
+     <div class="tip">Feed it the greens at the right moment, then it becomes your mount for the area. There are several forests across the world map.</div>`},
+  {id:"ragnarok", n:"Ragnarok", tier:"bronze", phase:5,
+   ts:"Find Ragnarok", tags:["story"],
+   guide:`
+     <p>Obtain the <strong>Ragnarok airship</strong> during the <strong>Lunar Cry</strong> sequence on Disc 3. Board the wrecked ship and claim it — it becomes your endgame airship and unlocks deep-sea and island exploration (Bahamut, Cactuar, the Deep Sea Research Center).</p>`},
+  {id:"kills1000", n:"1000 Kills", tier:"silver", phase:5,
+   ts:"Kill 1000 enemies", tags:["grind"],
+   guide:`
+     <p>Defeat 1000 enemies in battle. This is a long grind — combine it with AP farming.</p>
+     <div class="tip">Grind at a high-encounter spot (e.g. the Desert / Island Closest to Hell, or Cactuar Island) with Enc-Half / Enc-None toggled as needed. Pair with the Magic Miner and Magician trophies to be efficient.</div>`},
+  {id:"timbermaniacs", n:"Timber Maniacs", tier:"gold", phase:5,
+   ts:"Collect all Timber Maniacs magazines", tags:["missable","collectable"],
+   guide:`
+     <p>Collect <strong>every issue of the Timber Maniacs magazine</strong>, scattered across towns, trains, the Garden, and hidden spots worldwide.</p>
+     <p>Several are <strong>missable</strong> — a few issues can only be reached during specific story windows (e.g. inside the Dollet radio tower, the prison, the Lunar base).</p>
+     <div class="tip crit">Check a guide for the issue-by-issue locations and grab each one the moment you pass through an area — the missable ones are the reason people fail this trophy.</div>`},
+  {id:"obellake", n:"Obel Lake Secret", tier:"gold", phase:5,
+   ts:"Complete the Obel Lake side quest", tags:["missable"],
+   guide:`
+     <p>Complete the <strong>Obel Lake</strong> side quest near Timber. Interact with the lake, answer the sequence of questions, and follow the clues to dig up the hidden items (including <strong>Three Stars</strong> and the <strong>Luck-J Scroll</strong>).</p>
+     <div class="tip">Save before answering — the correct responses vary. A short note of the sequence (or a guide) makes this quick.</div>`},
+  {id:"ufo", n:"UFO", tier:"silver", phase:5,
+   ts:"Complete the PuPu side quest", tags:["missable"],
+   guide:`
+     <p>Complete the <strong>PuPu (alien) side quest</strong>: spot the UFO at its <strong>three random encounter locations</strong> (the coast near Balamb, near Moomba Village, and on the world map), then fight <strong>PuPu</strong> at its final spot and defeat him.</p>
+     <div class="tip">Use regular attacks only — any spell heals PuPu. Stock some Elixirs; the final battle triggers after the third UFO sighting.</div>`},
+
+  // Phase 6 — Endgame & Platinum
+  {id:"omega", n:"Omega Destroyed", tier:"gold", phase:6,
+   ts:"Beat the Omega Weapon", tags:["critical","grind"],
+   guide:`
+     <p>Defeat <strong>Omega Weapon</strong>, the hardest optional super-boss in the game, located in <strong>Ultimecia's Castle</strong> (final dungeon).</p>
+     <p>He has over 1 million HP and uses devastating attacks (including attacks that hit for ~9998 and cast Death on the party).</p>
+     <div class="tip crit">The reliable strategy is <strong>invincibility abuse</strong>: cast <strong>Hero / Holy War</strong> to make the party invincible, keep everyone's ATB maxed, and spam <strong>Limit Breaks</strong> (or the <strong>Ragnarok / Eden</strong> summons). Do NOT draw the "Ultima" magic unless you want a very long fight.</div>`},
+  {id:"endgame", n:"End of Game", tier:"gold", phase:6,
+   ts:"Finish the game", tags:["story"],
+   guide:`<p>Defeat the final boss <strong>Ultimecia</strong> and finish the game. This is unavoidable — it unlocks as you clear the ending.</p>`},
+  {id:"lionheart", n:"Lionheart", tier:"platinum", phase:6,
+   ts:"Obtain all trophies", tags:["story"],
+   guide:`
+     <p>Unlock every other trophy in the game. Once all 34 are earned, <strong>Lionheart</strong> pops and the Platinum is yours.</p>
+     <div class="tip">Use this tracker phase by phase and you'll never lose track of the missable trophies.</div>`}
+];
+
+const PHASES = {
+  1:{n:"Into Balamb Garden", d:"Disc 1 opening — the tutorial GFs, first card games, weapon upgrade and your first 100 kills. These come naturally as you learn the Junction system."},
+  2:{n:"SeeD Exam & Salary", d:"Pass the Fire Cavern and Dollet exams, collect your SeeD salary, start drawing magic and climb toward SeeD rank A."},
+  3:{n:"Guardian Force Hunt", d:"Collect every GF across Discs 1–3. Most must be drawn from specific bosses — several are missable, so read each card carefully."},
+  4:{n:"Card World", d:"Triple Triad is the heart of the collectibles. Master the CC Group and handle the rare-card Loser trophy."},
+  5:{n:"Side Quests & Collectibles", d:"Timber Maniacs, Obel Lake, PuPu, Chocobo, max HP, the 1000-kill grind, and the Ragnarok airship."},
+  6:{n:"Endgame & Platinum", d:"Omega Weapon, finishing the game, and the Lionheart Platinum."}
+};
+
+/* ===== Render ===== */
+const $main = document.getElementById('main');
+const $side = document.getElementById('sidebar');
+const $q = document.getElementById('q');
+let curView = 'tracker';
+let curTier = 'all';
+let query = '';
+
+const state = JSON.parse(localStorage.getItem('ff8-done')||'{}');
+function save(){ localStorage.setItem('ff8-done', JSON.stringify(state)); updateProgress(); }
+
+function updateProgress(){
+  const total = TROPHIES.length;
+  const done = TROPHIES.filter(t=>state[t.id]).length;
+  document.getElementById('pct').textContent = done + ' / ' + total;
+  document.getElementById('pfill').style.width = (done/total*100)+'%';
+  renderSidebar();
+}
+
+function renderSidebar(){
+  const byPhase = {};
+  TROPHIES.forEach(t=>{ (byPhase[t.phase]=byPhase[t.phase]||[]).push(t); });
+  let h = '<div class="side-label">Walkthrough Phases</div>';
+  Object.keys(byPhase).sort((a,b)=>a-b).forEach(p=>{
+    const list = byPhase[p];
+    const done = list.filter(t=>state[t.id]).length;
+    h += `<div class="side-item" data-phase="${p}"><span class="dot" style="background:${phaseColor(p)}"></span>${PHASES[p].n}<span class="cnt ${done===list.length?'done':''}">${done}/${list.length}</span></div>`;
+  });
+  $side.innerHTML = h;
+  $side.querySelectorAll('.side-item').forEach(el=>{
+    el.onclick = ()=>{ document.querySelectorAll('[data-phase]').forEach(x=>x.classList.remove('active')); el.classList.add('active'); renderTracker(parseInt(el.dataset.phase)); };
+  });
+}
+
+function phaseColor(p){ return ['#5e5ce6','#0a84ff','#30d158','#f5a623','#ff375f','#a2845e'][p-1] || '#5e5ce6'; }
+
+function matches(t){
+  if(curTier!=='all' && t.tier!==curTier) return false;
+  if(query){ const s=(t.n+' '+t.ts).toLowerCase(); if(!s.includes(query.toLowerCase())) return false; }
+  return true;
+}
+
+function badgeTags(t){
+  let h='';
+  if(t.tags.includes('missable')) h+='<span class="badge missable">Missable</span>';
+  if(t.tags.includes('critical')) h+='<span class="badge critical">Critical</span>';
+  if(t.tags.includes('grind')) h+='<span class="badge grind">Grind</span>';
+  if(t.tags.includes('story')) h+='<span class="badge story">Story</span>';
+  return h;
+}
+
+function trophyCard(t){
+  const done = state[t.id];
+  return `<div class="trophy ${done?'done':''}" id="tr-${t.id}" data-tier="${t.tier}">
+    <div class="trow" onclick="toggle('${t.id}')">
+      <div class="check">${done?`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`:''}</div>
+      ${badgeSVG(t.tier,38)}
+      <div class="tb"><div class="tn">${t.n}</div><div class="ts">${t.ts}</div></div>
+      <div class="badges">${badgeTags(t)}</div>
+      <div class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+    </div>
+    <div class="tdetail"><div class="tdi">${t.guide}</div></div>
+  </div>`;
+}
+
+function renderTracker(phase){
+  curView='tracker';
+  document.querySelectorAll('#viewTabs button').forEach(b=>b.classList.toggle('active',b.dataset.view==='tracker'));
+  document.getElementById('tierFilter').style.display='flex';
+  if(phase){
+    const list = TROPHIES.filter(t=>t.phase===phase && matches(t));
+    const done = TROPHIES.filter(t=>t.phase===phase && state[t.id]).length;
+    let h = `<div class="phase-head">
+      <div class="pk">Phase ${phase}</div>
+      <div class="pt">${PHASES[phase].n}</div>
+      <div class="pd">${PHASES[phase].d}</div>
+    </div>`;
+    if(!list.length){ h += `<div class="empty">No trophies match your filter.</div>`; }
+    else { list.forEach(t=>{ h += trophyCard(t); }); }
+    $main.innerHTML = h;
+  } else {
+    let h = '';
+    const pkeys = [...new Set(TROPHIES.map(t=>t.phase))].sort((a,b)=>a-b);
+    pkeys.forEach(p=>{
+      const list = TROPHIES.filter(t=>t.phase===p && matches(t));
+      if(!list.length) return;
+      const done = TROPHIES.filter(t=>t.phase===p && state[t.id]).length;
+      h += `<div class="phase-head" style="margin-top:${p===1?0:18}px">
+        <div class="pk">Phase ${p}</div>
+        <div class="pt" style="font-size:19px">${PHASES[p].n} <span style="font-size:12px;color:var(--text3);font-weight:500">${done}/${TROPHIES.filter(t=>t.phase===p).length}</span></div>
+      </div>`;
+      list.forEach(t=>{ h += trophyCard(t); });
+    });
+    if(!h) h = `<div class="empty">No trophies match your search or filter.</div>`;
+    $main.innerHTML = h;
+  }
+  updateProgress();
+}
+
+function toggle(id){
+  const el = document.getElementById('tr-'+id);
+  const open = el.classList.toggle('open');
+  // close others in same list
+  const t = TROPHIES.find(x=>x.id===id);
+  const siblings = $main.querySelectorAll('.trophy.open');
+  siblings.forEach(s=>{ if(s!==el) s.classList.remove('open'); });
+}
+
+/* ===== Game Guide view ===== */
+function renderGuide(){
+  curView='guide';
+  document.querySelectorAll('#viewTabs button').forEach(b=>b.classList.toggle('active',b.dataset.view==='guide'));
+  document.getElementById('tierFilter').style.display='none';
+  const gfs = [
+    ["Quezacotl","Automatic — Balamb Garden (start)"],
+    ["Shiva","Automatic — Balamb Garden (start)"],
+    ["Ifrit","Defeat him in the Fire Cavern (SeeD exam)"],
+    ["Siren","Draw from Elvoret — Dollet TV Tower (SeeD exam)"],
+    ["Diablos","Use the Magic Lamp (Cid's gift)"],
+    ["Brothers","Defeat Sacred & Minotaur — Tomb of the Unknown King"],
+    ["Carbuncle","Draw from Iguion — Deling City parade (Disc 2)"],
+    ["Leviathan","Draw from NORG — depths of Balamb Garden (Disc 2)"],
+    ["Pandemona","Draw from Fujin — Fujin & Raijin battle (Disc 2)"],
+    ["Cerberus","Defeat him — Galbadia Garden hall (Disc 2)"],
+    ["Alexander","Draw from Edea — Deling City (Disc 2)"],
+    ["Doomtrain","Craft with Solomon Ring + items at a save point"],
+    ["Bahamut","Defeat him — Deep Sea Research Center"],
+    ["Cactuar","Defeat Jumbo Cactuar — Cactuar Island"],
+    ["Tonberry","Draw from Tonberry King — Centra Ruins"],
+    ["Eden","Draw from Ultima Weapon — Deep Sea Research Center"]
+  ];
+  const gfRows = gfs.map(g=>`<tr><td>${g[0]}</td><td>${g[1]}</td></tr>`).join('');
+  let h = `<div class="guidepage">
+    <div class="phase-head"><div class="pk">Companion Guide</div><div class="pt">FF8 Systems &amp; Locations</div>
+      <div class="pd">Everything you need beside the trophy list — the Junction system, every GF's location, Triple Triad, and a look at the key locations.</div></div>
+
+    <div class="guide-section">
+      <h2>📌 The Junction System in 30 seconds</h2>
+      <p class="sub">FF8's power comes from <strong>Junctioning</strong> magic and GFs to your stats — not from levelling alone.</p>
+      <ul>
+        <li><strong>Junction magic to stats:</strong> give each character a GF with the right "-J" abilities (HP-J, Str-J, Vit-J, Spr-J, etc.), then stock strong magic into that stat. Full-Life on HP, Firaga on Str, etc.</li>
+        <li><strong>Abilities:</strong> every GF learns abilities with AP — prioritize <strong>HP-J, Str-J</strong>, then <strong>Enc-None / Enc-Half</strong> (for the kill/draw grinds) and <strong>Card / Card Mod</strong> (for weapon materials and card collection).</li>
+        <li><strong>Draw everything:</strong> stock rare magic from bosses and draw points — this feeds Magician, Magic Miner and Maximum HP.</li>
+        <li><strong>Remaster boosts:</strong> the L3/R3 boosts (3x speed, near-invincible, no-encounters) don't block trophies — feel free to use them.</li>
+      </ul>
+    </div>
+
+    <div class="guide-section">
+      <h2>⚔️ Every Guardian Force &amp; how to get it</h2>
+      <p class="sub">16 GFs, each tied to a trophy. Almost all the drawn ones are missable — draw them in the fights listed below.</p>
+      <table class="gf-table"><tr><th>GF</th><th>How to obtain</th></tr>${gfRows}</table>
+    </div>
+
+    <div class="guide-section">
+      <h2>🃏 Triple Triad quick rules</h2>
+      <p class="sub">The card game that powers a third of this trophy list.</p>
+      <ul>
+        <li><strong>Board:</strong> 3×3 grid. Place one card per turn; cards have four numbers (top/right/bottom/left).</li>
+        <li><strong>Capture:</strong> a placed card's numbers beat the adjacent card's touching numbers to flip it. <strong>Plus</strong> and <strong>Same</strong> rules add combo flips.</li>
+        <li><strong>Rare cards:</strong> GF and character cards. Losing one earns <em>Loser</em>; collecting all earns <em>Card King</em>.</li>
+        <li><strong>Queen of Cards</strong> spreads regional rules (Random, Same, Elemental, etc.) as she travels — trade with her to manage rules you dislike.</li>
+        <li><strong>Card Mod</strong> (Quezacotl's ability) refines cards into items — the secret to fast weapon upgrades and rare materials (including Doomtrain's parts).</li>
+      </ul>
+      <div class="tip">The CC Group in Balamb Garden guards many of the rarest cards — beating all of them is both the Cards Club Master trophy and the backbone of Card King.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="guide-section">
+        <h2>🏫 Balamb Garden</h2>
+        <img class="shot" src="img/balamb-garden.jpg" alt="Balamb Garden central hall">
+        <p class="shotcap">The Garden's hub — where the tutorial GFs, your first card games and the SeeD exams begin.</p>
+      </div>
+      <div class="guide-section">
+        <h2>🃏 Triple Triad in action</h2>
+        <img class="shot" src="img/triple-triad.jpg" alt="Triple Triad board">
+        <p class="shotcap">The 3×3 card board — win games for Card Player, lose a rare card for Loser, and farm everything for Card King.</p>
+      </div>
+      <div class="guide-section">
+        <h2>🔥 Fire Cavern — Ifrit</h2>
+        <img class="shot" src="img/ifrit.jpg" alt="Ifrit boss battle">
+        <p class="shotcap">The SeeD exam boss. Take the 10-minute limit, hit his Ice weakness, and he joins (plus the Ifrit card).</p>
+      </div>
+      <div class="guide-section">
+        <h2>⚡ Omega Weapon</h2>
+        <img class="shot" src="img/omega.jpg" alt="Omega Weapon boss battle">
+        <p class="shotcap">The super-boss in Ultimecia's Castle — beat him for the Omega Destroyed gold trophy.</p>
+      </div>
+      <div class="guide-section">
+        <h2>🏰 Ultimecia — Final Battle</h2>
+        <img class="shot" src="img/ultimecia.jpg" alt="Ultimecia final boss">
+        <p class="shotcap">The final boss. Clearing her earns End of Game — the last gold before the Platinum.</p>
+      </div>
+      <div class="guide-section">
+        <h2>🐉 Ultimecia &amp; Griever</h2>
+        <img class="shot" src="img/ultimecia-griever.jpg" alt="Ultimecia with Griever junctioned">
+        <p class="shotcap">The multi-phase finale — keep Aura up and spam Limit Breaks to close out the game.</p>
+      </div>
+      <div class="guide-section">
+        <h2>🛡️ SeeD Exam — Dollet</h2>
+        <img class="shot" src="img/dollet.jpg" alt="Seifer at Dollet TV tower">
+        <p class="shotcap">The Dollet mission and TV tower — where you can draw Siren from Elvoret and score big for SeeD rank A.</p>
+      </div>
+      <div class="guide-section">
+        <h2>🎓 SeeD &amp; Rank</h2>
+        <img class="shot" src="img/balamb-hall.jpg" alt="Balamb Garden characters">
+        <p class="shotcap">SeeD life — the exams and missions that push you toward the Top Rank (SeeD rank A) silver trophy.</p>
+      </div>
+    </div>
+
+    <div class="footnote">
+      Trophy list verified against public FF8 Remastered sources (35 trophies: 1 Platinum, 4 Gold, 16 Silver, 14 Bronze). Screenshots are real gameplay captures used for reference.
+      Progress is saved in your browser only — no account, no login needed.
+    </div>
+  </div>`;
+  $main.innerHTML = h;
+  updateProgress();
+}
+
+/* ===== events ===== */
+document.querySelectorAll('#viewTabs button').forEach(b=>{
+  b.onclick = ()=>{ if(b.dataset.view==='tracker') renderTracker(); else renderGuide(); };
+});
+document.querySelectorAll('#tierFilter button').forEach(b=>{
+  b.onclick = ()=>{
+    curTier = b.dataset.tier;
+    document.querySelectorAll('#tierFilter button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderTracker();
+  };
+});
+$q.addEventListener('input', ()=>{ query = $q.value; renderTracker(); });
+document.addEventListener('click', e=>{
+  const check = e.target.closest('.check');
+  if(check){
+    e.stopPropagation();
+    const card = check.closest('.trophy');
+    const id = card.id.replace('tr-','');
+    state[id] = !state[id];
+    save();
+    card.classList.toggle('done', state[id]);
+    const sc = card.querySelector('.check');
+    sc.innerHTML = state[id] ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>` : '';
+    updateProgress();
+  }
+});
+
+/* ===== init ===== */
+renderTracker();
+</script>
+</body>
+</html>
